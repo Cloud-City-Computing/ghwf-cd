@@ -1,0 +1,31 @@
+name: Deploy to EC2
+inputs:
+  HOSTNAME:
+    description: "SSH Hostname of EC2 Server"
+    required: true
+  USER_NAME:
+    description: "User to SSH in as"
+    required: true
+  SSH_KEY:
+    description: "SSH PEM Key"
+    required: true
+  REPO:
+    description: "Name of repo used to CD"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: SSH into EC2 Instance
+      env:
+        HOSTNAME: ${{ inputs.HOSTNAME }}
+        USER_NAME: ${{ inputs.USER_NAME }}
+        SSH_KEY: ${{ inputs.SSH_KEY }}
+        REPO: ${{ inputs.REPO }}   
+      run: |
+        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        ssh -T -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} << EOF
+          cd /home/${USER_NAME}/${REPO}
+          sh scripts/destroy_dev.sh
+          sh scripts/start_dev.sh
+        EOF
