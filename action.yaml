@@ -18,6 +18,7 @@ inputs:
 
 runs:
   using: composite
+  environment: ${{ inputs.branch }}
   steps:
     - name: Clone the Repo
       uses: actions/checkout@v4
