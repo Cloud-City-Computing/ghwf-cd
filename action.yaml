@@ -12,10 +12,20 @@ inputs:
   REPO:
     description: "Name of repo used to CD"
     required: true
+  BRANCH:
+    description: "Branch code should run on"
+    required: true
 
 runs:
   using: composite
   steps:
+    - name: Clone the Repo
+      uses: actions/checkout@v4
+        ref: ${{ inputs.BRANCH }}
+    - name: Install OpenSSH and SSHPass
+      run : |
+        sudo apt-get update -y
+        sudo apt-get install openssh-client sshpass -y
     - name: SSH into EC2 Instance
       env:
         HOSTNAME: ${{ inputs.HOSTNAME }}
