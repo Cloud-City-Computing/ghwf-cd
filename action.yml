@@ -21,6 +21,7 @@ runs:
   steps:
     - name: Clone the Repo
       uses: actions/checkout@v4
+      with:
         ref: ${{ inputs.BRANCH }}
     - name: Install OpenSSH and SSHPass
       run : |
