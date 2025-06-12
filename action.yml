@@ -35,8 +35,9 @@ runs:
         SSH_KEY: ${{ inputs.SSH_KEY }}
         REPO: ${{ inputs.REPO }}   
       run: |
+        echo "$HOSTNAME"
         echo "$SSH_KEY" > private_key && chmod 600 private_key
-        ssh -T -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} << EOF
+        ssh -i private_key ${USER_NAME}@${HOSTNAME} << EOF
           cd /home/${USER_NAME}/${REPO}
           sh scripts/destroy_dev.sh
           sh scripts/start_dev.sh
