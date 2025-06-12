@@ -23,11 +23,6 @@ runs:
       uses: actions/checkout@v4
       with:
         ref: ${{ inputs.BRANCH }}
-    - name: Install OpenSSH and SSHPass
-      run : |
-        sudo apt-get update -y
-        sudo apt-get install openssh-client sshpass -y
-      shell: bash
     - name: SSH into EC2 Instance
       env:
         HOSTNAME: ${{ inputs.HOSTNAME }}
@@ -35,9 +30,8 @@ runs:
         SSH_KEY: ${{ inputs.SSH_KEY }}
         REPO: ${{ inputs.REPO }}   
       run: |
-        echo "$HOSTNAME"
         echo "$SSH_KEY" > private_key && chmod 600 private_key
-        ssh -i private_key ${USER_NAME}@${HOSTNAME} << EOF
+        ssh -T -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} << EOF
           cd /home/${USER_NAME}/${REPO}
           sh scripts/destroy_dev.sh
           sh scripts/start_dev.sh
