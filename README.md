@@ -17,22 +17,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  auto-deploy:
-    name: Deploy to EC2 - Auto
-    runs-on: ubuntu-latest
-    environment: ${{ github.ref_name }}
-    if: ${{ github.event_name == 'push' }}
-    steps:
-      - name: Call workflow to deploy to EC2
-        uses: Cloud-City-Computing/ghwf-cd@v1
-        with:
-          HOSTNAME: ${{ secrets.HOSTNAME }}
-          USER_NAME: ${{ secrets.USER_NAME }}
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-          REPO: ${{ vars.REPO }}
-          BRANCH: ${{ github.ref_name }}
-
-  manual-deploy:
+  deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
     environment: prod
