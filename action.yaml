@@ -1,0 +1,20 @@
+name: Deploy to EC2
+description: Deploys the latest changes to an EC2 instance.
+
+runs:
+  using: composite
+  steps:
+    - name: Clone the Repo
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.ref_name }}
+    - name: SSH into EC2 Instance
+      shell: bash
+      env:
+        REPO: ${{ github.event.repository.name }}   
+      run: |
+        echo "$SSH_KEY" > private_key && chmod 600 private_key
+        ssh -T -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} << EOF
+          cd /home/${USER_NAME}/${REPO}
+          sh scripts/update.sh
+        EOF
