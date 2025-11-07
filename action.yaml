@@ -14,7 +14,6 @@ runs:
         REPO: ${{ github.event.repository.name }}   
       run: |
         echo "$SSH_KEY" > private_key && chmod 600 private_key
-        echo "$SSH_KEY"
         ssh -T -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} << EOF
           cd /home/${USER_NAME}/${REPO}
           sh scripts/update.sh
